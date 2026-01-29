@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>UNPC RPG Character Sheet</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h1 { text-align: center; }
+    .container { display: flex; gap: 20px; }
+    .section { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; flex: 1; }
+    .skills { display: grid; grid-template-columns: 150px 120px 80px 80px; gap: 10px; align-items: center; }
+    select { width: 100px; }
+    .calcBox { border: 1px solid #999; padding: 3px; text-align: center; }
+    .note { font-size: 0.9em; margin-bottom: 10px; color: #555; }
+    .divider { grid-column: 1 / -1; border-top: 2px solid #333; margin: 10px 0; padding-top: 5px; font-weight: bold; }
+    footer { text-align: center; margin-top: 30px; font-size: 0.9em; color: #444; }
+    footer a { color: #0066cc; text-decoration: none; }
+  </style>
+</head>
+<body>
+
+  <h1>UNPC RPG Character Sheet</h1>
+
+  <div class="container">
+    <!-- Skills -->
+    <div class="section">
+      <h2>Skills</h2>
+      <div class="note">Check specialization box to add +20</div>
+      <div class="skills" id="skillsGrid"></div>
+    </div>
+
+    <!-- Strikes + Dice Roller -->
+    <div class="section">
+      <h2>Strikes</h2>
+      <p><strong>Max Strikes:</strong> <span id="maxStrikes"></span></p>
+      <p>
+        <strong>Current Strikes Taken:</strong> 
+        <button onclick="changeStrikes(-1)">-</button>
+        <span id="currentStrikes">0</span>
+        <button onclick="changeStrikes(1)">+</button>
+      </p>
+      <p><strong>Status:</strong> <span id="status"></span></p>
+
+      <hr>
+      <h2>Dice Roller</h2>
+      <label>Skill:
+        <select id="rollSkill" onchange="updateTarget()"></select>
+      </label>
+      <br>
+      <label>Difficulty:
+        <select id="rollDifficulty" onchange="updateTarget()">
+          <option value="40">Very Easy (+40)</option>
+          <option value="20">Easy (+20)</option>
+          <option value="0" selected>Normal (0)</option>
+          <option value="-20">Hard (-20)</option>
+          <option value="-40">Formidable (-40)</option>
+          <option value="-60">Herculean (-60)</option>
+        </select>
+      </label>
+      <p><strong>Target Number:</strong> <span id="targetNumber"></span></p>
+      <button onclick="rollDice()">Roll!</button>
+      <p><strong>Result:</strong> <span id="rollResult"></span></p>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- System Notes -->
+    <div class="section">
+      <h2>System Notes</h2>
+      <ul>
+        <li>Roll d100 under a skill rating. Modifiers apply to the rating, not the dice.</li>
+        <li><strong>Critical:</strong> Roll ≤ tens place of skill (top 10%).</li>
+        <li><strong>Fumble:</strong> Roll 99 or 00.</li>
+        <li><strong>Opposed Rolls:</strong> Both roll; higher wins. Initiator wins ties (alt rule: higher roll wins).</li>
+        <li><strong>Difficulty Modifiers:</strong> Very Easy +40, Easy +20, Normal 0, Hard -20, Formidable -40, Herculean -60.</li>
+      </ul>
+    </div>
+
+    <!-- Magic -->
+    <div class="section">
+      <h2>Magic</h2>
+      <p>Roll WILL vs TN depending on spell difficulty:</p>
+      <ul>
+        <li>Simple: TN 70</li>
+        <li>Intermediate: TN 50</li>
+        <li>Expert: TN 25</li>
+        <li>Godlike: TN 5</li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    <p>Fan-made by nicolascsf for UNPC RPG created by Uriah Edwards</p>
+    <p><a href="https://www.drivethrurpg.com/en/product/532751/the-officially-unofficial-ultimate-no-prep-challenge-rpg" target="_blank">
+      Get The Officially Unofficial Ultimate No-Prep Challenge RPG!
+    </a></p>
+  </footer>
+
+<script>
+  const skillValues = [60,50,50,40,40,30,30,20,20,20];
+  const broadIds = ["body","finesse","aware","intellect","will","ingenuity","social"];
+  const combatIds = ["melee","ranged","defend"];
+  const skillsGrid = document.getElementById("skillsGrid");
+
+  function buildSkills(ids, title) {
+    const divider = document.createElement("div");
+    divider.className = "divider";
+    divider.textContent = title;
+    skillsGrid.appendChild(divider);
+
+    ids.forEach(id => {
+      const row = document.createElement("div");
+      row.style.display = "contents";
+
+      const label = document.createElement("div");
+      label.textContent = id.toUpperCase();
+      row.appendChild(label);
+
+      const select = document.createElement("select");
+      select.id = id;
+      select.innerHTML = "<option value=''>--</option>";
+      skillValues.forEach((val, idx) => {
+        select.innerHTML += `<option value="${val}_${idx}">${val}</option>`;
+      });
+      select.addEventListener("change", () => { updateSheet(); updateTarget(); });
+      row.appendChild(select);
+
+      const specBox = document.createElement("input");
+      specBox.type = "checkbox";
+      specBox.id = id+"_spec";
+      specBox.addEventListener("change", () => { updateSheet(); updateTarget(); });
+      row.appendChild(specBox);
+
+      const calc = document.createElement("div");
+      calc.id = id+"_calc";
+      calc.className = "calcBox";
+      calc.textContent = "";
+      row.appendChild(calc);
+
+      skillsGrid.appendChild(row);
+    });
+  }
+
+  buildSkills(broadIds, "Broad Skills");
+  buildSkills(combatIds, "Combat Skills");
+
+  function updateSheet() {
+    const allIds = [...broadIds, ...combatIds];
+    const chosen = allIds.map(id => document.getElementById(id).value).filter(v => v !== "");
+    allIds.forEach(id => {
+      const sel = document.getElementById(id);
+      Array.from(sel.options).forEach(opt => {
+        if (opt.value !== "" && chosen.includes(opt.value) && sel.value !== opt.value) {
+          opt.disabled = true;
+        } else {
+          opt.disabled = false;
+        }
+      });
+
+      const baseVal = sel.value ? parseInt(sel.value.split("_")[0]) : 0;
+      const spec = document.getElementById(id+"_spec").checked;
+      const calcVal = spec ? baseVal + 20 : baseVal;
+      document.getElementById(id+"_calc").textContent = calcVal ? calcVal : "";
+    });
+
+    const bodySel = document.getElementById("body").value;
+    const bodyVal = bodySel ? parseInt(bodySel.split("_")[0]) : 0;
+    const maxStrikes = Math.floor(bodyVal / 10);
+    document.getElementById("maxStrikes").textContent = maxStrikes;
+
+    const current = parseInt(document.getElementById("currentStrikes").textContent) || 0;
+    let status = "Healthy";
+    if (current >= maxStrikes) {
+      status = "Incapacitated!";
+    } else if (current >= Math.ceil(maxStrikes/2)) {
+      status = "Bloody";
+    }
+    document.getElementById("status").textContent = status;
+  }
+
+  function changeStrikes(delta) {
+    let current = parseInt(document.getElementById("currentStrikes").textContent) || 0;
+    current += delta;
+    if (current < 0) current = 0;
+    document.getElementById("currentStrikes").textContent = current;
+    updateSheet();
+  }
+
+  // Dice Roller
+  const rollSkillSel = document.getElementById("rollSkill");
+  const allIds = [...broadIds, ...combatIds];
+  allIds.forEach(id => {
+    const opt = document.createElement("option");
+    opt.value = id;
+    opt.textContent = id.toUpperCase();
+    rollSkillSel.appendChild(opt); }); function updateTarget() { const skillId = document.getElementById("rollSkill").value; const sel = document.getElementById(skillId); const baseVal = sel && sel.value ? parseInt(sel.value.split("_")[0]) : 0; const spec = skillId ? document.getElementById(skillId+"_spec").checked : false; let skillVal = spec ? baseVal + 20 : baseVal; const diff = parseInt(document.getElementById("rollDifficulty").value); const target = skillVal + diff; document.getElementById("targetNumber").textContent = target || ""; } function rollDice() { const skillId = document.getElementById("rollSkill").value; const sel = document.getElementById(skillId); const baseVal = sel && sel.value ? parseInt(sel.value.split("_")[0]) : 0; const spec = skillId ? document.getElementById(skillId+"_spec").checked : false; let skillVal = spec ? baseVal + 20 : baseVal; const diff = parseInt(document.getElementById("rollDifficulty").value); const target = skillVal + diff; // Roll 2d10 → d100 
+    const tens = Math.floor(Math.random()*10)*10; 
+    const ones = Math.floor(Math.random()*10); 
+    let roll = tens + ones; 
+    if (tens === 0 && ones === 0) roll = 100;
+    //double zero = 100 
+    let result = `Rolled ${roll} vs target ${target}. `;
+     if (roll === 99 || roll === 100) { result += "FUMBLE!";}
+     else if (roll <= Math.floor(skillVal/10)) { result += "CRITICAL SUCCESS!"; } 
+     else if (roll <= target) { result += "SUCCESS."; } 
+     else { result += "FAILURE."; } document.getElementById("rollResult").textContent = result; }
+     // Initialize target display updateTarget(); 
+     </script> 
+     </body> 
+     </html>
