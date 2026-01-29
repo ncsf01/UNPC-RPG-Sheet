@@ -26,6 +26,7 @@
     <!-- Skills -->
     <div class="section">
       <h2>Skills</h2>
+      <button onclick="randomCharacter()">🎲 Generate Random Character</button>
       <div class="note">Check specialization box to add +20</div>
       <div class="skills" id="skillsGrid"></div>
     </div>
@@ -102,7 +103,7 @@
   const broadIds = ["body","finesse","aware","intellect","will","ingenuity","social"];
   const combatIds = ["melee","ranged","defend"];
   const skillsGrid = document.getElementById("skillsGrid");
-
+  
   function buildSkills(ids, title) {
     const divider = document.createElement("div");
     divider.className = "divider";
@@ -205,7 +206,31 @@
      else if (roll <= Math.floor(skillVal/10)) { result += "CRITICAL SUCCESS!"; } 
      else if (roll <= target) { result += "SUCCESS."; } 
      else { result += "FAILURE."; } document.getElementById("rollResult").textContent = result; }
-     // Initialize target display updateTarget(); 
+     // Initialize target display updateTarget();
+     
+     function randomCharacter() {
+  const values = [60,50,50,40,40,30,30,20,20,20];
+  const shuffled = values.sort(() => 0.5 - Math.random());
+  const allIds = [...broadIds, ...combatIds];
+
+  allIds.forEach((id, idx) => {
+    const sel = document.getElementById(id);
+    const val = shuffled[idx];
+    // find option with this value
+    for (let opt of sel.options) {
+      if (opt.value.startsWith(val.toString())) {
+        sel.value = opt.value;
+        break;
+      }
+    }
+    document.getElementById(id+"_spec").checked = false; // reset specs
+  });
+
+  updateSheet();
+  updateTarget();
+}
+
+     
      </script> 
      </body> 
      </html>
