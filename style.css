@@ -1,4 +1,4 @@
-/* Import a retro mono font */
+/* === Font Import === */
 @font-face {
   font-family: 'Share Tech Mono';
   src: url('fonts/ShareTechMono-Regular.woff2') format('woff2'),
@@ -8,16 +8,30 @@
   font-style: normal;
 }
 
+/* === Theme Variables === */
+:root {
+  --bg-color: #fdfdfd;
+  --text-color: #111;
+  --card-bg: #fff;
+  --card-border: #000;
+}
+
+body.dark-mode {
+  --bg-color: #111;
+  --text-color: #fdfdfd;
+  --card-bg: #222;
+  --card-border: #666;
+}
+
+/* === Base Styles === */
 body {
   font-family: 'Share Tech Mono', 'Courier New', monospace;
-  background-color: #fdfdfd;
-  color: #111;
+  background-color: var(--bg-color);
+  color: var(--text-color);
   margin: 20px;
   line-height: 1.4;
 }
 
-
-/* Main title */
 h1 {
   text-align: center;
   font-size: 2em;
@@ -28,334 +42,120 @@ h1 {
   letter-spacing: 2px;
 }
 
-/* RPG-style section headers */
 h2 {
   font-size: 1.2em;
   text-transform: uppercase;
   background: #000;
   color: #fff;
   padding: 6px 12px;
-  margin-top: 25px;
-  margin-bottom: 15px;
+  margin: 25px 0 15px;
   border: 2px solid #000;
   display: inline-block;
   box-shadow: 3px 3px 0 #666;
 }
+h2::before { margin-right: 6px; }
 
-/* Section boxes styled like RPG panels */
-.section {
-  border: 2px solid #000;
-  background: #fff;
-  box-shadow: 4px 4px 0 #000;
+/* === Layout === */
+.container { display: flex; gap: 20px; }
+.character-info { display: flex; gap: 30px; align-items: stretch; margin-bottom: 25px; }
+.section { border: 2px solid var(--card-border); background-color: var(--card-bg); box-shadow: 4px 4px 0 #000; padding: 15px; margin-bottom: 25px; flex: 1; }
+.skills { display: grid; grid-template-columns: 150px 120px 80px 80px; gap: 10px; align-items: center; }
+.divider { grid-column: 1 / -1; border-top: 2px solid #000; margin: 12px 0; padding-top: 5px; font-weight: bold; font-size: 1.1em; letter-spacing: 1px; }
+
+/* === Cards === */
+.upload-card {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--card-bg);
+  border: 2px solid var(--card-border);
+  padding: 20px;
+  box-shadow: 4px 4px 0 var(--card-border);
+  display: none;   /* hidden until button is clicked */
+  z-index: 1000;
+  width: 300px;
+  text-align: center;
+}
+
+.portrait-card, .info-card, .card {
+  background-color: var(--card-bg);
+  border: 2px solid var(--card-border);
+  box-shadow: 4px 4px 0 var(--card-border);
   padding: 15px;
-  margin-bottom: 25px;
 }
+.portrait-card { flex: 0 0 220px; display: flex; flex-direction: column; align-items: center; }
+.info-card { flex: 1; display: flex; flex-direction: column; }
 
-/* Skills grid */
-.skills {
-  display: grid;
-  grid-template-columns: 150px 120px 80px 80px;
-  gap: 10px;
-  align-items: center;
-}
-
-.calcBox {
-  border: 1px solid #000;
-  background: #eee;
-  text-align: center;
-  padding: 3px;
-  font-weight: bold;
-}
-
-/* Divider lines with flair */
-.divider {
-  grid-column: 1 / -1;
-  border-top: 2px dashed #000;
-  margin: 12px 0;
-  padding-top: 5px;
-  font-weight: bold;
-  font-size: 1.1em;
-  letter-spacing: 1px;
-}
-
-/* Buttons */
-button {
-  background: #000;
-  color: #fff;
-  border: none;
-  padding: 5px 10px;
-  margin: 0 2px;
-  cursor: pointer;
-  font-family: inherit;
-  font-weight: bold;
-  box-shadow: 2px 2px 0 #666;
-}
-button:hover {
-  background: #444;
-}
-
-/* Dice roller results styled like callouts */
-#rollResult {
-  font-weight: bold;
-  padding: 6px 10px;
-  border: 2px solid #000;
-  background: #f0f0f0;
-  display: inline-block;
-  margin-top: 8px;
-}
-
-/* Footer */
-footer {
-  text-align: center;
-  font-size: 0.9em;
-  margin-top: 40px;
-  border-top: 3px double #000;
-  padding-top: 12px;
-}
-footer a {
-  color: #0066cc;
-  text-decoration: none;
-  font-weight: bold;
-}
-footer a:hover {
-  text-decoration: underline;
-}
-
-/* Force dropdowns to use the same font */
-select, option {
-  font-family: inherit;
-}
-
-/* Section icons */
-h2::before {
-  margin-right: 6px;
-}
-
-/* Dice result outcome colors */
-.success { color: #0066cc; }
-.critical { color: #008000; font-weight: bold; }
-.failure { color: #555; }
-.fumble { color: #cc0000; font-weight: bold; }
-
-.resize-handle {
-  width: 15px;
-  height: 15px;
-  background: #666;
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  cursor: se-resize;
-}
-
-.upload-btn:hover {
-  background: #444;
-}
-
+/* === Portrait Window === */
 #portraitWindow {
-  width: 200px;
-  height: 200px;
+  width: 200px; height: 200px;
   border: 2px solid #000;
   position: relative;
   resize: both;
   overflow: hidden;
   margin: 0 auto;
 }
+#portraitImg { width: 100%; height: 100%; object-fit: cover; }
+.resize-handle { width: 15px; height: 15px; background: #666; position: absolute; bottom: 0; right: 0; cursor: se-resize; }
 
-#portraitImg {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.resize-handle {
-  width: 15px;
-  height: 15px;
-  background: #666;
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  cursor: se-resize;
-}
-
-.upload-btn {
-  margin-top: 8px;
-  background: #000;
-  color: #fff;
-  border: none;
-  padding: 6px 12px;
-  cursor: pointer;
-  font-family: inherit;
-  font-size: 0.9em;
-  box-shadow: 2px 2px 0 #666;
-  width: 200px;
-  text-align: center;
-}
-.upload-btn:hover {
-  background: #444;
-}
-
-/* Generic card style */
-.card {
-  border: 2px solid #000;
-  box-shadow: 4px 4px 0 #000;
-  padding: 15px;
-  background: #fff;
-}
-
-/* Upload card overlay */
-.upload-card {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #fff;
-  border: 2px solid #000;
-  padding: 20px;
-  box-shadow: 4px 4px 0 #000;
-  display: none;   /* hidden until button is clicked */
-  z-index: 1000;   /* ensures it appears above other elements */
-  width: 300px;
-  text-align: center;
-}
-
-.upload-card h3 {
-  margin-top: 0;
-  background: #000;
-  color: #fff;
-  padding: 5px;
-  border-bottom: 2px solid #000;
-}
-
-/* Upload button under portrait */
-.upload-btn {
-  margin-top: 5px;
-  background: #000;
-  color: #fff;
-  border: none;
-  padding: 4px 8px;
-  cursor: pointer;
-  font-family: inherit;
-  font-size: 0.9em;
-}
-.upload-btn:hover {
-  background: #444;
-}
-
-/* Name box smaller */
-.name-container {
-  flex: 0 0 150px; /* fixed width */
-}
-
-/* Upload card overlay */
-.upload-card {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #fff;
-  border: 2px solid #000;
-  padding: 20px;
-  box-shadow: 4px 4px 0 #000;
-  display: none;
-  z-index: 1000;
-  width: 300px;
-  text-align: center;
-}
-.upload-card h3 {
-  margin-top: 0;
-  background: #000;
-  color: #fff;
-  padding: 5px;
-  border-bottom: 2px solid #000;
-}
-
-/* Details card matches portrait card height */
-.info-card {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.character-info {
-  display: flex;
-  gap: 30px;
-  align-items: stretch;   /* both cards equal height */
-  margin-bottom: 25px;
-}
-
-/* Portrait card */
-.portrait-card {
-  flex: 0 0 220px;        /* fixed width */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* Portrait window drives card height */
-#portraitWindow {
-  width: 200px;
-  height: 200px;
-  border: 2px solid #000;
-  position: relative;
-  resize: both;           /* allow resizing */
-  overflow: hidden;
-}
-
-#portraitImg {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.resize-handle {
-  width: 15px;
-  height: 15px;
-  background: #666;
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  cursor: se-resize;
-}
-
-.upload-btn {
-  margin-top: 8px;
-  background: #000;
-  color: #fff;
-  border: none;
-  padding: 4px 8px;
-  cursor: pointer;
-  font-family: inherit;
-  font-size: 0.9em;
-  box-shadow: 2px 2px 0 #666;
-  width: 200px;
-}
-.upload-btn:hover {
-  background: #444;
-}
-
-/* Details card matches portrait card height */
-.info-card {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-#charName {
+/* === Inputs === */
+#charName, #charNotes, select, option {
   font-family: inherit;
   font-size: 1em;
   padding: 5px;
-  border: 2px solid #000;
+  background-color: var(--card-bg);
+  border: 2px solid var(--card-border);
+  box-shadow: 2px 2px 0 var(--card-border);
+  color: var(--text-color);
+  min-width: 150px; /* enough space for longer labels */ 
+  max-width: 100%; /* don’t overflow the card */
+}
+#charName { width: 350px; margin-bottom: 10px; }
+#charNotes { flex: 1; resize: none; }
+.note { font-size: 0.9em; margin-bottom: 10px; color: var(--text-color); }
+
+/* === Buttons === */
+button, .upload-btn {
+  background: #000;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: bold;
   box-shadow: 2px 2px 0 #666;
-  width: 350px;           /* small name box */
-  margin-bottom: 10px;
+}
+button:hover, .upload-btn:hover { background: #444; }
+.upload-btn { margin-top: 8px; width: 200px; text-align: center; }
+
+/* === Dice Roller === */
+#rollResult { font-weight: bold; padding: 6px 10px; border: 2px solid #000; background: #f0f0f0; display: inline-block; margin-top: 8px; }
+.success { color: #0066cc; }
+.critical { color: #008000; font-weight: bold; }
+.failure { color: #555; }
+.fumble { color: #cc0000; font-weight: bold; }
+
+/* === Footer === */
+footer { text-align: center; font-size: 0.9em; margin-top: 40px; border-top: 3px double #000; padding-top: 12px; }
+footer a { color: #0066cc; text-decoration: none; font-weight: bold; }
+footer a:hover { text-decoration: underline; }
+
+/* === Special Cases === */
+.calcBox {
+  border: 1px solid var(--card-border);
+  background: #eee;
+  text-align: center;
+  padding: 3px;
+  font-weight: bold;
+  color: #000; /* always black */
+}
+body.dark-mode .calcBox {
+  background-color: #ccc; /* darker background in dark mode */
+  color: #000;            /* still black text */
 }
 
-#charNotes {
-  font-family: inherit;
-  font-size: 1em;
-  padding: 5px;
-  border: 2px solid #000;
-  box-shadow: 2px 2px 0 #666;
-  flex: 1;                /* fill remaining card height */
-  resize: none;
-}
+/* Status colors */
+.status-healthy { color: #008000; font-weight: bold; }
+.status-bloody { color: #cc0000; font-weight: bold; }
+.status-incapacitated { color: #000; font-weight: bold; }

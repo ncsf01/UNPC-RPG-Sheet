@@ -4,19 +4,10 @@
   <link rel="stylesheet" href="style.css">
   <meta charset="UTF-8">
   <title>UNPC RPG Character Sheet</title>
-  <style>
-    h1 { text-align: center; }
-    .container { display: flex; gap: 20px; }
-    .section { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; flex: 1; }
-    .skills { display: grid; grid-template-columns: 150px 120px 80px 80px; gap: 10px; align-items: center; }
-    select { width: 100px; }
-    .calcBox { border: 1px solid #999; padding: 3px; text-align: center; }
-    .note { font-size: 0.9em; margin-bottom: 10px; color: #555; }
-    .divider { grid-column: 1 / -1; border-top: 2px solid #333; margin: 10px 0; padding-top: 5px; font-weight: bold; }
-    footer { text-align: center; margin-top: 30px; font-size: 0.9em; color: #444; }
-    footer a { color: #0066cc; text-decoration: none; }
-  </style>
 </head>
+<header>
+    <button id="darkModeToggle">Toggle Dark Mode</button>
+  </header>
 <body>
 
   <h1>UNPC RPG Character Sheet</h1>
@@ -201,13 +192,21 @@
     document.getElementById("maxStrikes").textContent = maxStrikes;
 
     const current = parseInt(document.getElementById("currentStrikes").textContent) || 0;
-    let status = "Healthy";
-    if (current >= maxStrikes) {
-      status = "Incapacitated!";
-    } else if (current >= Math.ceil(maxStrikes/2)) {
-      status = "Bloody";
-    }
-    document.getElementById("status").textContent = status;
+let status = "Healthy";
+let statusClass = "status-healthy";
+
+if (current >= maxStrikes) {
+  status = "Incapacitated!";
+  statusClass = "status-incapacitated";
+} else if (current >= Math.ceil(maxStrikes / 2)) {
+  status = "Bloody";
+  statusClass = "status-bloody";
+}
+
+const statusEl = document.getElementById("status");
+statusEl.textContent = status;
+statusEl.className = statusClass; // apply the right class
+
   }
 
   function changeStrikes(delta) {
@@ -340,6 +339,11 @@ function applyPortrait() {
 
   closeUploadCard();
 }
+
+document.getElementById("darkModeToggle").addEventListener("click", () => {
+  document.body.classList.toggle("dark-mode");
+});
+
 </script> 
 </body> 
 </html>
