@@ -3,7 +3,9 @@
 
 @font-face {
   font-family: 'Share Tech Mono';
-  src: url('ShareTechMono-Regular.ttf') format('truetype');
+  src: url('ShareTechMono-Regular.woff2') format('woff2'),
+       url('ShareTechMono-Regular.woff') format('woff'),
+       url('ShareTechMono-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -15,6 +17,7 @@ body {
   margin: 20px;
   line-height: 1.4;
 }
+
 
 /* Main title */
 h1 {
