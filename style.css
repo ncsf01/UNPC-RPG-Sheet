@@ -3,9 +3,9 @@
 
 @font-face {
   font-family: 'Share Tech Mono';
-  src: url('ShareTechMono-Regular.woff2') format('woff2'),
-       url('ShareTechMono-Regular.woff') format('woff'),
-       url('ShareTechMono-Regular.ttf') format('truetype');
+  src: url('fonts/ShareTechMono-Regular.woff2') format('woff2'),
+       url('fonts/ShareTechMono-Regular.woff') format('woff'),
+       url('fonts/ShareTechMono-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
