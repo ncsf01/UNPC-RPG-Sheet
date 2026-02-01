@@ -1,124 +1,195 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <link rel="stylesheet" href="style.css">
-  <meta charset="UTF-8">
-  <title>UNPC RPG Character Sheet</title>
-</head>
-<header>
-    <button id="darkModeToggle">Toggle Dark Mode</button>
-  </header>
-<body>
-
-  <h1>UNPC RPG Character Sheet</h1>
-
-  <!-- Character Info -->
-<div class="section character-info">
-  <!-- Portrait card -->
-  <div class="card portrait-card">
-    <h2>Portrait</h2>
-    <div id="portraitWindow">
-      <img id="portraitImg" src="stickfigure.jpg" alt="Character Portrait">
-      <div class="resize-handle"></div>
-    </div>
-    <button class="upload-btn" onclick="openUploadCard()">Upload Portrait</button>
-  </div>
-
-  <!-- Details card -->
-  <div class="card info-card">
-    <h2>Details</h2>
-    <input type="text" id="charName" placeholder="Name" autocomplete="off">
-    <textarea id="charNotes" placeholder="Notes..."></textarea>
-  </div>
-</div>
-
-<!-- Upload Card -->
-<div id="uploadCard" class="upload-card">
-  <h3>Upload Character Portrait</h3>
-  <input type="file" id="portraitUpload" accept="image/png, image/jpeg"><br><br>
-  <input type="text" id="portraitUrl" placeholder="Or paste image URL here"><br><br>
-  <button onclick="applyPortrait()">OK</button>
-  <button onclick="closeUploadCard()">Cancel</button>
-</div>
-
-  <div class="container">
-    <!-- Skills -->
-    <div class="section">
-      <h2>Skills</h2>
-      <button onclick="randomCharacter()">🎲 Generate Random Character</button>
-      <div class="note">Check specialization box to add +20</div>
-      <div class="skills" id="skillsGrid"></div>
-    </div>
-
-    <!-- Strikes + Dice Roller -->
-    <div class="section">
-      <h2>Strikes</h2>
-      <p><strong>Max Strikes:</strong> <span id="maxStrikes"></span></p>
-      <p>
-        <strong>Current Strikes Taken:</strong> 
-        <button onclick="changeStrikes(-1)">-</button>
-        <span id="currentStrikes">0</span>
-        <button onclick="changeStrikes(1)">+</button>
+  <head>
+    <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8" />
+    <title>UNPC RPG Character Sheet</title>
+  </head>
+  <header></header>
+  <body>
+    <h1>UNPC RPG Character Sheet</h1>
+    <button id="darkModeToggle">☾</button>
+    <!-- Character Manager Modal -->
+    <div id="characterManager" class="upload-card" style="display: none">
+      <h3>Character Manager</h3>
+      <p style="color: red; font-weight: bold">
+        ⚠ Characters are saved in your browser's cache and will be lost if you
+        clear it.
       </p>
-      <p><strong>Status:</strong> <span id="status"></span></p>
 
-      <hr>
-      <h2>Dice Roller</h2>
-      <label>Skill:
-        <select id="rollSkill" onchange="updateTarget()"></select>
-      </label>
-      <br>
-      <label>Difficulty:
-        <select id="rollDifficulty" onchange="updateTarget()">
-          <option value="40">Very Easy (+40)</option>
-          <option value="20">Easy (+20)</option>
-          <option value="0" selected>Normal (0)</option>
-          <option value="-20">Hard (-20)</option>
-          <option value="-40">Formidable (-40)</option>
-          <option value="-60">Herculean (-60)</option>
-        </select>
-      </label>
-      <p><strong>Target Number:</strong> <span id="targetNumber"></span></p>
-      <button onclick="rollDice()">Roll!</button>
-      <p><strong>Result:</strong> <span id="rollResult"></span></p>
-    </div>
-  </div>
+      <!-- Save -->
+      <button onclick="saveCharacter()">Save Current Character</button>
 
-  <div class="container">
-    <!-- System Notes -->
-    <div class="section">
-      <h2>System Notes</h2>
-      <ul>
-        <li>Roll d100 under a skill rating. Modifiers apply to the rating, not the dice.</li>
-        <li><strong>Critical:</strong> Roll ≤ tens place of skill (top 10%).</li>
-        <li><strong>Fumble:</strong> Roll 99 or 00.</li>
-        <li><strong>Opposed Rolls:</strong> Both roll; higher wins. Initiator wins ties (alt rule: higher roll wins).</li>
-        <li><strong>Difficulty Modifiers:</strong> Very Easy +40, Easy +20, Normal 0, Hard -20, Formidable -40, Herculean -60.</li>
-      </ul>
+      <!-- Saved characters list -->
+      <div id="savedList"></div>
+
+      <!-- Upload -->
+      <p>Upload JSON Character File</p>
+      <input type="file" id="uploadFile" accept="application/json" />
+      <br /><br />
+      <button onclick="applyCharacterUpload()">Upload</button>
+
+      <!-- Close -->
+      <br /><br />
+      <button onclick="closeCharacterManager()">Close</button>
     </div>
 
-    <!-- Magic -->
-    <div class="section">
-      <h2>Magic</h2>
-      <p>Roll WILL vs TN set by GM depending on complexity/severity of the spell</p>
-      <ul>
-        <li>Very Easy +40</li>
-        <li>Easy +20</li>
-        <li>Normal 0</li>
-        <li>Hard -20</li>
-        <li>Formidable -40</li>
-        <li>Herculean -60</li>
-      </ul>
-    </div>
-  </div>
+    <!-- Trigger button -->
+    <button onclick="openCharacterManager()">Manage Characters</button>
+    <button onclick="resetCharacter()">Clean Sheet</button>
 
-  <footer>
-    <p>Fan-made by nicolascsf for UNPC RPG created by Uriah Edwards</p>
-    <p><a href="https://www.drivethrurpg.com/en/product/532751/the-officially-unofficial-ultimate-no-prep-challenge-rpg" target="_blank">
-      Get The Officially Unofficial Ultimate No-Prep Challenge RPG!
-    </a></p>
-  </footer>
-<script src="script.js"></script>
-</body> 
+    <!-- Portrait Upload Modal -->
+    <div id="uploadCard" class="upload-card" style="display: none">
+      <h3>Upload Portrait</h3>
+      <input type="file" id="portraitUpload" accept="image/*" />
+      <br /><br />
+      <input type="text" id="portraitUrl" placeholder="Image URL" />
+      <br /><br />
+      <button onclick="applyPortrait()">Apply</button>
+      <button onclick="closeUploadCard()">Cancel</button>
+    </div>
+
+    <!-- Character Info -->
+    <div class="section character-info">
+      <!-- Portrait card -->
+      <div class="card portrait-card">
+        <h2>Portrait</h2>
+        <div id="portraitWindow">
+          <img
+            id="portraitImg"
+            src="stickfigure.jpg"
+            alt="Character Portrait"
+          />
+          <div class="resize-handle"></div>
+        </div>
+        <button class="upload-btn" onclick="openUploadCard()">
+          Upload Portrait
+        </button>
+      </div>
+
+      <!-- Details card -->
+      <div class="card info-card">
+        <h2>Details</h2>
+        <input
+          type="text"
+          id="charName"
+          placeholder="Name"
+          autocomplete="off"
+        />
+        <textarea id="charNotes" placeholder="Notes..."></textarea>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- Skills -->
+      <div class="section">
+        <h2>Skills</h2>
+        <button onclick="randomCharacter()">
+          🎲 Generate Random Character
+        </button>
+        <div class="note">Check specialization box to add +20</div>
+        <div class="skills" id="skillsGrid"></div>
+      </div>
+
+      <!-- Strikes + Dice Roller -->
+      <div class="section">
+        <h2>Strikes</h2>
+        <p><strong>Max Strikes:</strong> <span id="maxStrikes"></span></p>
+        <p>
+          <strong>Current Strikes Taken:</strong>
+          <button onclick="changeStrikes(-1)">-</button>
+          <span id="currentStrikes">0</span>
+          <button onclick="changeStrikes(1)">+</button>
+        </p>
+        <p><strong>Status:</strong> <span id="status"></span></p>
+
+        <hr />
+        <h2>Dice Roller</h2>
+        <label
+          >Skill:
+          <select id="rollSkill" onchange="updateTarget()"></select>
+        </label>
+        <br />
+        <label
+          >Difficulty:
+          <select id="rollDifficulty" onchange="updateTarget()">
+            <option value="40">Very Easy (+40)</option>
+            <option value="20">Easy (+20)</option>
+            <option value="0" selected>Normal (0)</option>
+            <option value="-20">Hard (-20)</option>
+            <option value="-40">Formidable (-40)</option>
+            <option value="-60">Herculean (-60)</option>
+          </select>
+        </label>
+        <p><strong>Target Number:</strong> <span id="targetNumber"></span></p>
+        <button onclick="rollDice()">Roll!</button>
+        <p><strong>Result:</strong> <span id="rollResult"></span></p>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- System Notes -->
+      <div class="section">
+        <h2>System Notes</h2>
+        <ul>
+          <li>
+            Roll d100 under a skill rating. Modifiers apply to the rating, not
+            the dice.
+          </li>
+          <li>
+            <strong>Critical:</strong> Roll ≤ tens place of skill (top 10%).
+          </li>
+          <li><strong>Fumble:</strong> Roll 99 or 00.</li>
+          <li>
+            <strong>Opposed Rolls:</strong> Both roll; higher wins. Initiator
+            wins ties (alt rule: higher roll wins).
+          </li>
+          <li>
+            <strong>Difficulty Modifiers:</strong> Very Easy +40, Easy +20,
+            Normal 0, Hard -20, Formidable -40, Herculean -60.
+          </li>
+        </ul>
+      </div>
+
+      <!-- Magic -->
+      <div class="section">
+        <h2>Magic</h2>
+        <p>
+          Roll WILL vs TN set by GM depending on complexity/severity of the
+          spell
+        </p>
+        <ul>
+          <li>Very Easy +40</li>
+          <li>Easy +20</li>
+          <li>Normal 0</li>
+          <li>Hard -20</li>
+          <li>Formidable -40</li>
+          <li>Herculean -60</li>
+        </ul>
+      </div>
+    </div>
+
+    <div
+      id="saveLoadWindow"
+      style="
+        display: none;
+        border: 2px solid #000;
+        padding: 10px;
+        margin-top: 20px;
+      "
+    ></div>
+
+    <footer>
+      <p>Fan-made by nicolascsf for UNPC RPG created by Uriah Edwards</p>
+      <p>
+        <a
+          href="https://www.drivethrurpg.com/en/product/532751/the-officially-unofficial-ultimate-no-prep-challenge-rpg"
+          target="_blank"
+        >
+          Get The Officially Unofficial Ultimate No-Prep Challenge RPG!
+        </a>
+      </p>
+    </footer>
+    <script src="script.js"></script>
+  </body>
 </html>
-

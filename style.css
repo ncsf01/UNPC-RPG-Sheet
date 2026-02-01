@@ -157,5 +157,5 @@ body.dark-mode .calcBox {
 
 /* Status colors */
 .status-healthy { color: #008000; font-weight: bold; }
-.status-bloody { color: #cc0000; font-weight: bold; }
-.status-incapacitated { color: #000; font-weight: bold; }
+.status-bloody { color: orange; font-weight: bold; }
+.status-incapacitated { color: red; font-weight: bold; }
