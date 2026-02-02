@@ -1,0 +1,221 @@
+/* === Font Imports === */
+@font-face {
+  font-family: "Share Tech Mono";
+  src:
+    url("../fonts/ShareTechMono-Regular.woff2") format("woff2"),
+    url("../fonts/ShareTechMono-Regular.woff") format("woff"),
+    url("../fonts/ShareTechMono-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Uncial+Antiqua&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Special+Elite&display=swap");
+
+/* === Modal Styles === */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+.modal-content {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  margin: 10% auto;
+  padding: 20px;
+  border: 2px solid var(--card-border);
+  width: 300px;
+  box-shadow: 4px 4px 0 var(--card-border);
+  text-align: center;
+}
+
+/* === Default Theme === */
+:root {
+  --font-family: "Share Tech Mono", "Courier New", monospace;
+
+  --bg-color: #fdfdfd;
+  --text-color: #111;
+  --card-bg: #fff;
+  --card-border: #000;
+
+  --heading-bg: #000;
+  --heading-text: #fff;
+  --heading-border: #000;
+
+  --button-bg: #000;
+  --button-text: #fff;
+  --button-hover: #444;
+
+  --shadow-color: #000;
+
+  --dice-bg: #f0f0f0;
+  --success-color: #0066cc;
+  --critical-color: #008000;
+  --failure-color: #555;
+  --fumble-color: #cc0000;
+
+  --link-color: #0066cc;
+
+  --focus-border: #000;
+  --focus-shadow: #666;
+
+  --calc-bg: #eee;
+  --calc-text: #000;
+  --calc-bg-dark: #ccc;
+  --calc-text-dark: #000;
+
+  --status-healthy: #008000;
+  --status-bloody: orange;
+  --status-incapacitated: red;
+}
+
+body.dark-mode {
+  --bg-color: #111;
+  --text-color: #fdfdfd;
+  --card-bg: #222;
+  --card-border: #000;
+
+  --heading-bg: #000;
+  --heading-text: #fff;
+  --heading-border: #000;
+
+  --button-bg: #000;
+  --button-text: #fff;
+  --button-hover: #444;
+
+  --shadow-color: #000;
+
+  --dice-bg: #333;
+}
+
+/* === Fantasy Theme === */
+body.theme-fantasy {
+  --font-family: "Uncial Antiqua", cursive;
+
+  --bg-color: #fff8dc; /* cornsilk parchment */
+  --text-color: #3b2f2f;
+  --card-bg: #fdf6e3;
+  --card-border: #8b4513;
+  --heading-bg: #8b4513;
+  --heading-text: #fff8dc;
+  --button-bg: #a0522d;
+  --button-hover: #5a2d0c;
+  --shadow-color: #5a2d0c;
+
+  --dice-bg: #fff8dc;
+  --success-color: #006400;
+  --critical-color: #228b22;
+  --failure-color: #8b0000;
+  --fumble-color: #b22222;
+
+  --link-color: #8b4513;
+
+  --focus-border: #8b4513;
+  --focus-shadow: #a0522d;
+
+  --calc-bg: #f5deb3;
+  --calc-text: #4b2e2e;
+  --calc-bg-dark: #3b2a1a;
+  --calc-text-dark: #f5deb3;
+
+  --status-healthy: #006400;
+  --status-bloody: #b8860b;
+  --status-incapacitated: #8b0000;
+}
+
+body.theme-fantasy.dark-mode {
+  --bg-color: #2b1d0e;
+  --text-color: #f5deb3;
+  --card-bg: #2b1d0e;
+  --card-border: #8b4513;
+}
+
+/* === Sci-Fi Theme === */
+body.theme-sci-fi {
+  --font-family: "Orbitron", sans-serif;
+
+  --bg-color: #0a0f1c;
+  --text-color: #00ffe5;
+  --card-bg: #0a0f1c;
+  --card-border: #00ffe5;
+  --heading-bg: #ff00ff;
+  --heading-text: #0a0f1c;
+  --button-bg: #00ffe5;
+  --button-hover: #009999;
+  --shadow-color: #ff00ff;
+
+  --dice-bg: #001122;
+  --success-color: #00ffcc;
+  --critical-color: #00ff99;
+  --failure-color: #999;
+  --fumble-color: #ff0033;
+
+  --link-color: #00ffcc;
+
+  --focus-border: #00ffcc;
+  --focus-shadow: #009999;
+
+  --calc-bg: #001122;
+  --calc-text: #00ffcc;
+  --calc-bg-dark: #000014;
+  --calc-text-dark: #0ff;
+
+  --status-healthy: #00ff99;
+  --status-bloody: #ffcc00;
+  --status-incapacitated: #ff0033;
+}
+
+body.theme-sci-fi.dark-mode {
+  --bg-color: #000014;
+  --text-color: #0ff;
+  --card-bg: #000014;
+  --card-border: #0ff;
+}
+
+/* === Noir Theme === */
+body.theme-noir {
+  --font-family: "Special Elite", monospace;
+
+  --bg-color: #111;
+  --text-color: #f5f5f5;
+  --card-bg: #222;
+  --card-border: #444;
+  --heading-bg: #000;
+  --heading-text: #f5f5f5;
+  --button-bg: #000;
+  --button-hover: #444;
+  --shadow-color: #660000;
+
+  --dice-bg: #333;
+  --success-color: #eee;
+  --critical-color: #ccc;
+  --failure-color: #999;
+  --fumble-color: #ff0000;
+
+  --link-color: #eee;
+
+  --focus-border: #444;
+  --focus-shadow: #666;
+
+  --calc-bg: #333;
+  --calc-text: #eee;
+  --calc-bg-dark: #000;
+  --calc-text-dark: #ccc;
+
+  --status-healthy: #eee;
+  --status-bloody: orange;
+  --status-incapacitated: red;
+}
+
+body.theme-noir.dark-mode {
+  --bg-color: #000;
+  --text-color: #ccc;
+  --card-bg: #000;
+  --card-border: #666;
+}

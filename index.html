@@ -1,17 +1,39 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <link rel="stylesheet" href="style.css" />
+    <!-- === CSS Imports (modularized) === -->
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/layout.css" />
+    <link rel="stylesheet" href="css/portrait.css" />
+    <link rel="stylesheet" href="css/inputs.css" />
+    <link rel="stylesheet" href="css/buttons.css" />
+    <link rel="stylesheet" href="css/dice.css" />
+    <link rel="stylesheet" href="css/footer.css" />
+    <link rel="stylesheet" href="css/status.css" />
+    <link rel="stylesheet" href="css/theme.css" />
+
+    <!-- === Meta + Title === -->
     <meta charset="UTF-8" />
     <title>UNPC RPG Character Sheet</title>
   </head>
+
   <header></header>
   <body>
+    <!-- === HEADER === -->
     <h1>UNPC RPG Character Sheet</h1>
-    <button id="darkModeToggle">☾</button>
-    <!-- Character Manager Modal -->
+
+    <div id="controls">
+      <button id="darkModeToggle">Dark Mode</button>
+      <button id="themeToggle">Theme</button>
+      <button id="manageCharacters">Manage Characters</button>
+      <button id="cleanSheet">Clean Sheet</button>
+    </div>
+
+    <!-- === CHARACTER MANAGER MODAL (hidden by default) === -->
     <div id="characterManager" class="upload-card" style="display: none">
       <h3>Character Manager</h3>
+
+      <!-- Warning message (unchanged) -->
       <p style="color: red; font-weight: bold">
         ⚠ Characters are saved in your browser's cache and will be lost if you
         clear it.
@@ -34,11 +56,7 @@
       <button onclick="closeCharacterManager()">Close</button>
     </div>
 
-    <!-- Trigger button -->
-    <button onclick="openCharacterManager()">Manage Characters</button>
-    <button onclick="resetCharacter()">Clean Sheet</button>
-
-    <!-- Portrait Upload Modal -->
+    <!-- === PORTRAIT UPLOAD MODAL (hidden by default) === -->
     <div id="uploadCard" class="upload-card" style="display: none">
       <h3>Upload Portrait</h3>
       <input type="file" id="portraitUpload" accept="image/*" />
@@ -49,7 +67,24 @@
       <button onclick="closeUploadCard()">Cancel</button>
     </div>
 
-    <!-- Character Info -->
+    <!-- === THEME MODAL (hidden by default) === -->
+    <div id="themeModal" class="modal">
+      <div class="modal-content">
+        <h3>Select Theme</h3>
+        <select id="themeSelect">
+          <option value="default">Default</option>
+          <option value="fantasy">Fantasy</option>
+          <option value="sci-fi">Sci-Fi</option>
+          <option value="noir">Noir</option>
+        </select>
+        <div class="modal-buttons">
+          <button onclick="confirmTheme()">OK</button>
+          <button onclick="cancelTheme()">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- === CHARACTER INFO SECTION === -->
     <div class="section character-info">
       <!-- Portrait card -->
       <div class="card portrait-card">
@@ -80,8 +115,9 @@
       </div>
     </div>
 
+    <!-- === MAIN CONTAINER: Skills + Strikes/Dice Roller === -->
     <div class="container">
-      <!-- Skills -->
+      <!-- Skills Section -->
       <div class="section">
         <h2>Skills</h2>
         <button onclick="randomCharacter()">
@@ -91,7 +127,7 @@
         <div class="skills" id="skillsGrid"></div>
       </div>
 
-      <!-- Strikes + Dice Roller -->
+      <!-- Strikes + Dice Roller Section -->
       <div class="section">
         <h2>Strikes</h2>
         <p><strong>Max Strikes:</strong> <span id="maxStrikes"></span></p>
@@ -104,14 +140,16 @@
         <p><strong>Status:</strong> <span id="status"></span></p>
 
         <hr />
+
+        <!-- Dice Roller -->
         <h2>Dice Roller</h2>
-        <label
-          >Skill:
+        <label>
+          Skill:
           <select id="rollSkill" onchange="updateTarget()"></select>
         </label>
         <br />
-        <label
-          >Difficulty:
+        <label>
+          Difficulty:
           <select id="rollDifficulty" onchange="updateTarget()">
             <option value="40">Very Easy (+40)</option>
             <option value="20">Easy (+20)</option>
@@ -127,6 +165,7 @@
       </div>
     </div>
 
+    <!-- === SYSTEM NOTES + MAGIC SECTION === -->
     <div class="container">
       <!-- System Notes -->
       <div class="section">
@@ -151,7 +190,7 @@
         </ul>
       </div>
 
-      <!-- Magic -->
+      <!-- Magic Section -->
       <div class="section">
         <h2>Magic</h2>
         <p>
@@ -169,6 +208,7 @@
       </div>
     </div>
 
+    <!-- Save/Load Window (hidden by default) -->
     <div
       id="saveLoadWindow"
       style="
@@ -179,6 +219,7 @@
       "
     ></div>
 
+    <!-- === FOOTER (unchanged) === -->
     <footer>
       <p>Fan-made by nicolascsf for UNPC RPG created by Uriah Edwards</p>
       <p>
@@ -190,6 +231,15 @@
         </a>
       </p>
     </footer>
-    <script src="script.js"></script>
+
+    <!-- === JS Imports (modularized) === -->
+    <script src="js/skills.js"></script>
+    <script src="js/strikes.js"></script>
+    <script src="js/dice.js"></script>
+    <script src="js/portrait.js"></script>
+    <script src="js/character.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/darkmode.js"></script>
+    <script src="js/app.js"></script>
   </body>
 </html>
