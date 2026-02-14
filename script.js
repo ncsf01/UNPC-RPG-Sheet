@@ -106,16 +106,26 @@ function updateSheet() {
         }
       });
     } else {
-      // Normal duplicate-prevention mode
-      Array.from(sel.options).forEach((opt) => {
-        if (
-          opt.value !== "" &&
-          chosen.includes(opt.value) &&
-          sel.value !== opt.value
-        ) {
-          opt.disabled = true;
+      // Normal duplicate-prevention mode, but allow multiple copies up to totalAllowed
+      const counts = {};
+      allIds.forEach((otherId) => {
+        const val = document.getElementById(otherId).value;
+        if (val) {
+          const num = parseInt(val);
+          counts[num] = (counts[num] || 0) + 1;
+        }
+      });
+
+      Array.from(sel.options).forEach((opt, idx) => {
+        if (idx === 0) {
+          opt.disabled = false; // "--" always enabled
+        } else if (sel.value === opt.value) {
+          opt.disabled = false; // keep current selection enabled
         } else {
-          opt.disabled = false;
+          const num = parseInt(opt.textContent);
+          const totalAllowed = skillValues.filter((v) => v === num).length;
+          const currentlyUsed = counts[num] || 0;
+          opt.disabled = currentlyUsed >= totalAllowed;
         }
       });
     }
